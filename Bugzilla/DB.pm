@@ -13,8 +13,6 @@ use Moo;
 use DBI;
 use DBIx::Connector;
 
-has 'connector' => (is => 'lazy', handles => [qw( dbh )],);
-
 use Bugzilla::Logging;
 use Bugzilla::Constants;
 use Bugzilla::Install::Requirements;
@@ -33,8 +31,9 @@ use Storable qw(dclone);
 use English qw(-no_match_vars);
 use Module::Runtime qw(require_module);
 
-has [qw(dsn user pass attrs)] => (is => 'ro', required => 1,);
-
+has 'connector' => (is => 'lazy', handles => [qw( dbh )]);
+has 'model'     => (is => 'lazy');
+has [qw(dsn user pass attrs)] => (is => 'ro', required => 1);
 
 # Install proxy methods to the DBI object.
 # We can't use handles() as DBIx::Connector->dbh has to be called each
@@ -1319,6 +1318,12 @@ sub bz_rollback_transaction {
 #####################################################################
 # Subclass Helpers
 #####################################################################
+
+sub _build_model {
+  my ($self) = @_;
+  require Bugzilla::Model;
+  Bugzilla::Model->connect($self->dsn, $self->user, $self->pass, $self->attrs);
+}
 
 sub _build_connector {
   my ($self) = @_;
