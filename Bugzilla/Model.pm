@@ -1,9 +1,5 @@
 package Bugzilla::Model;
-use 5.10.1;
-use strict;
-use warnings;
-
-use base 'DBIx::Class::Schema';
+use Mojo::Base 'DBIx::Class::Schema';
 
 __PACKAGE__->load_namespaces(default_resultset_class => 'ResultSet');
 __PACKAGE__->load_components('Helper::Schema::QuoteNames');
