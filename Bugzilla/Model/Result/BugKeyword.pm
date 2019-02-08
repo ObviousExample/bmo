@@ -1,12 +1,11 @@
 package Bugzilla::Model::Result::BugKeyword;
-use Mojo::Base -strict;
-use DBIx::Class::Candy;
+use Mojo::Base 'DBIx::Class::Core';
 
-table('keywords');
-column('bug_id', 'keywordid');
-primary_key('bug_id', 'keywordid');
+__PACKAGE__->table('keywords');
+__PACKAGE__->add_columns('bug_id', 'keywordid');
+__PACKAGE__->set_primary_key('bug_id', 'keywordid');
 
-belongs_to(bug     => 'Bugzilla::Model::Result::Bug',     'bug_id');
-belongs_to(keyword => 'Bugzilla::Model::Result::Keyword', 'keywordid');
+__PACKAGE__->belongs_to(bug     => 'Bugzilla::Model::Result::Bug',     'bug_id');
+__PACKAGE__->belongs_to(keyword => 'Bugzilla::Model::Result::Keyword', 'keywordid');
 
 1;

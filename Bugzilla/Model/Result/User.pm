@@ -1,9 +1,8 @@
 package Bugzilla::Model::Result::User;
-use Mojo::Base -strict;
-use DBIx::Class::Candy;
+use Mojo::Base 'DBIx::Class::Core';
 
-table(Bugzilla::User->DB_TABLE);
-column(Bugzilla::User->DB_COLUMN_NAMES);
-primary_key(Bugzilla::User->ID_FIELD);
+__PACKAGE__->table(Bugzilla::User->DB_TABLE);
+__PACKAGE__->add_columns(Bugzilla::User->DB_COLUMN_NAMES);
+__PACKAGE__->set_primary_key(Bugzilla::User->ID_FIELD);
 
 1;

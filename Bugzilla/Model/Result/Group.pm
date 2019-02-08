@@ -1,9 +1,8 @@
 package Bugzilla::Model::Result::Group;
-use Mojo::Base -strict;
-use DBIx::Class::Candy;
+use Mojo::Base 'DBIx::Class::Core';
 
-table(Bugzilla::Group->DB_TABLE);
-column(Bugzilla::Group->DB_COLUMN_NAMES);
-primary_key(Bugzilla::Group->ID_FIELD);
+__PACKAGE__->table(Bugzilla::Group->DB_TABLE);
+__PACKAGE__->add_columns(Bugzilla::Group->DB_COLUMN_NAMES);
+__PACKAGE__->set_primary_key(Bugzilla::Group->ID_FIELD);
 
 1;

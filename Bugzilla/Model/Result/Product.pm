@@ -1,11 +1,10 @@
 package Bugzilla::Model::Result::Product;
-use Mojo::Base -strict;
-use DBIx::Class::Candy;
+use Mojo::Base 'DBIx::Class::Core';
 
-table(Bugzilla::Product->DB_TABLE);
-column(Bugzilla::Product->DB_COLUMN_NAMES);
-primary_key(Bugzilla::Product->ID_FIELD);
+__PACKAGE__->table(Bugzilla::Product->DB_TABLE);
+__PACKAGE__->add_columns(Bugzilla::Product->DB_COLUMN_NAMES);
+__PACKAGE__->set_primary_key(Bugzilla::Product->ID_FIELD);
 
-has_many('components', 'Bugzilla::Model::Result::Component', 'product_id');
+__PACKAGE__->has_many('components', 'Bugzilla::Model::Result::Component', 'product_id');
 
 1;

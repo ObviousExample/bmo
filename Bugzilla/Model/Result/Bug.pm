@@ -1,27 +1,26 @@
 package Bugzilla::Model::Result::Bug;
-use Mojo::Base -strict;
-use DBIx::Class::Candy;
+use Mojo::Base 'DBIx::Class::Core';
 
-table(Bugzilla::Bug->DB_TABLE);
-column(Bugzilla::Bug->DB_COLUMN_NAMES);
-primary_key(Bugzilla::Bug->ID_FIELD);
+__PACKAGE__->table(Bugzilla::Bug->DB_TABLE);
+__PACKAGE__->add_columns(Bugzilla::Bug->DB_COLUMN_NAMES);
+__PACKAGE__->set_primary_key(Bugzilla::Bug->ID_FIELD);
 
-has_one(reporter      => 'Bugzilla::Model::Result::User', 'userid');
-has_one(assigned_to   => 'Bugzilla::Model::Result::User', 'userid');
-might_have(qa_contact => 'Bugzilla::Model::Result::User', 'userid');
+__PACKAGE__->has_one(reporter      => 'Bugzilla::Model::Result::User', 'userid');
+__PACKAGE__->has_one(assigned_to   => 'Bugzilla::Model::Result::User', 'userid');
+__PACKAGE__->might_have(qa_contact => 'Bugzilla::Model::Result::User', 'userid');
 
-has_many(bug_keywords => 'Bugzilla::Model::Result::BugKeyword', 'bug_id');
-many_to_many(keywords => 'bug_keywords', 'keyword');
+__PACKAGE__->has_many(bug_keywords => 'Bugzilla::Model::Result::BugKeyword', 'bug_id');
+__PACKAGE__->many_to_many(keywords => 'bug_keywords', 'keyword');
 
-has_many(bug_groups => 'Bugzilla::Model::Result::BugGroup', 'bug_id');
-many_to_many(groups => 'bug_groups', 'group');
+__PACKAGE__->has_many(bug_groups => 'Bugzilla::Model::Result::BugGroup', 'bug_id');
+__PACKAGE__->many_to_many(groups => 'bug_groups', 'group');
 
-has_one(
+__PACKAGE__->has_one(
   product => 'Bugzilla::Model::Result::Product',
   {'foreign.id' => 'self.product_id'}
 );
 
-has_one(
+__PACKAGE__->has_one(
   component => 'Bugzilla::Model::Result::Component',
   {'foreign.id' => 'self.component_id'}
 );
