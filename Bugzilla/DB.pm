@@ -40,9 +40,9 @@ around 'attrs' => sub {
   my $attrs = dclone($self->$method);
   my $class = ref $self;
 
-  # This is only used by the DBIx::Class code
-  # DBIx::Connector does something difference because the old bugzilla
-  # code has its own ideas about transactions.
+  # This is only used by the DBIx::Class code DBIx::Connector does something
+  # different because the old bugzilla code has its own ideas about
+  # transactions.
   $attrs->{Callbacks}{connected} = sub {
     my ($dbh, $dsn) = @_;
     $class->on_dbi_connected(@_) if $class->can('on_dbi_connected');
@@ -256,7 +256,7 @@ sub bz_check_server_version {
 
   my $sql_vers = $self->bz_server_version;
 
-  my $sql_want = $db->{db_version};
+  my $sql_want   = $db->{db_version};
   my $version_ok = vers_cmp($sql_vers, $sql_want) > -1 ? 1 : 0;
 
   my $sql_server = $db->{name};
@@ -292,7 +292,7 @@ sub bz_create_database {
 
   # See if we can connect to the actual Bugzilla database.
   my $conn_success = eval { $dbh = connect_main() };
-  my $db_name = Bugzilla->localconfig->{db_name};
+  my $db_name      = Bugzilla->localconfig->{db_name};
 
   if (!$conn_success) {
     $dbh = _get_no_db_connection();
@@ -1172,7 +1172,7 @@ sub _bz_schema {
   my ($self) = @_;
   return $self->{private_bz_schema} if exists $self->{private_bz_schema};
   my @module_parts = split('::', ref $self);
-  my $module_name = pop @module_parts;
+  my $module_name  = pop @module_parts;
   $self->{private_bz_schema} = Bugzilla::DB::Schema->new($module_name);
   return $self->{private_bz_schema};
 }
@@ -1546,7 +1546,7 @@ sub _bz_populate_enum_table {
     my $insert
       = $self->prepare("INSERT INTO $sql_table (value,sortkey) VALUES (?,?)");
     my $sortorder = 0;
-    my $maxlen = max(map(length($_), @$valuelist)) + 2;
+    my $maxlen    = max(map(length($_), @$valuelist)) + 2;
     foreach my $value (@$valuelist) {
       $sortorder += 100;
       $insert->execute($value, $sortorder);
