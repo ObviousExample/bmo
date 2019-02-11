@@ -1370,8 +1370,9 @@ sub _build_connector {
     }
   }
   my $class = ref $self;
-  # This is different from the around 'attrs' above because we need a reference to $self.
-  # If we ever kill $dbh->bz_start_transaction() this hack can go away.
+
+# This is different from the around 'attrs' above because we need a reference to $self.
+# If we ever kill $dbh->bz_start_transaction() this hack can go away.
   weaken($self);
   $attributes->{Callbacks} = {
     connected => sub {
