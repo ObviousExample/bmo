@@ -35,6 +35,23 @@ has 'connector' => (is => 'lazy', handles => [qw( dbh )]);
 has 'model'     => (is => 'lazy');
 has [qw(dsn user pass attrs)] => (is => 'ro', required => 1);
 
+around 'attrs' => sub {
+  my ($method, $self) = @_;
+  my $attrs = dclone($self->$method);
+  my $class = ref $self;
+
+  # This is only used by the DBIx::Class code
+  # DBIx::Connector does something difference because the old bugzilla
+  # code has its own ideas about transactions.
+  $attrs->{Callbacks}{connected} = sub {
+    my ($dbh, $dsn) = @_;
+    $class->on_dbi_connected(@_) if $class->can('on_dbi_connected');
+    return;
+  };
+
+  return $attrs;
+};
+
 # Install proxy methods to the DBI object.
 # We can't use handles() as DBIx::Connector->dbh has to be called each
 # time we need a DBI handle to ensure the connection is alive.
@@ -1353,6 +1370,8 @@ sub _build_connector {
     }
   }
   my $class = ref $self;
+  # This is different from the around 'attrs' above because we need a reference to $self.
+  # If we ever kill $dbh->bz_start_transaction() this hack can go away.
   weaken($self);
   $attributes->{Callbacks} = {
     connected => sub {
