@@ -50,7 +50,6 @@ my %requires = (
   'DBIx::Connector'                     => 0,
   'DBIx::Class'                         => 0,
   'DBIx::Class::Helpers'                => 0,
-  'DBIx::Class::Candy'                  => 0,
   'Data::Password::passwdqc'            => '0.08',
   'Date::Format'                        => '2.23',
   'DateTime'                            => '0.75',

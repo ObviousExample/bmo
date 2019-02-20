@@ -5,14 +5,33 @@ __PACKAGE__->table(Bugzilla::Bug->DB_TABLE);
 __PACKAGE__->add_columns(Bugzilla::Bug->DB_COLUMN_NAMES);
 __PACKAGE__->set_primary_key(Bugzilla::Bug->ID_FIELD);
 
-__PACKAGE__->has_one(reporter      => 'Bugzilla::Model::Result::User', 'userid');
-__PACKAGE__->has_one(assigned_to   => 'Bugzilla::Model::Result::User', 'userid');
-__PACKAGE__->might_have(qa_contact => 'Bugzilla::Model::Result::User', 'userid');
+__PACKAGE__->has_one(
+  reporter => 'Bugzilla::Model::Result::User',
+  {'foreign.userid' => 'self.reporter'}
+);
 
-__PACKAGE__->has_many(bug_keywords => 'Bugzilla::Model::Result::BugKeyword', 'bug_id');
+__PACKAGE__->has_one(
+  assigned_to => 'Bugzilla::Model::Result::User',
+  {'foreign.userid' => 'self.assigned_to'}
+);
+__PACKAGE__->might_have(
+  qa_contact => 'Bugzilla::Model::Result::User',
+  {'foreign.userid' => 'self.qa_contact'}
+);
+
+__PACKAGE__->has_many(
+  bug_keywords => 'Bugzilla::Model::Result::BugKeyword',
+  'bug_id'
+);
+
 __PACKAGE__->many_to_many(keywords => 'bug_keywords', 'keyword');
 
-__PACKAGE__->has_many(bug_groups => 'Bugzilla::Model::Result::BugGroup', 'bug_id');
+__PACKAGE__->has_many(flags => 'Bugzilla::Model::Result::Flag', 'bug_id');
+
+__PACKAGE__->has_many(
+  bug_groups => 'Bugzilla::Model::Result::BugGroup',
+  'bug_id'
+);
 __PACKAGE__->many_to_many(groups => 'bug_groups', 'group');
 
 __PACKAGE__->has_one(
@@ -27,3 +46,4 @@ __PACKAGE__->has_one(
 
 
 1;
+
